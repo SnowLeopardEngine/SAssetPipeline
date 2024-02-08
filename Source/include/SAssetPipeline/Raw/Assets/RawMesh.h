@@ -5,16 +5,22 @@
 
 namespace SnowLeopardEngine::AssetPipeline
 {
-    struct Vertex
+    struct VertexData
     {
         glm::vec3 Position;
         glm::vec3 Normal;
         glm::vec2 TexCoords;
     };
 
-    struct RawMesh
+    struct MeshData
     {
-        std::vector<Vertex>   Vertices;
-        std::vector<uint32_t> Indices;
+        std::vector<VertexData> Vertices;
+        std::vector<uint32_t>   Indices;
+    };
+
+    struct RawMeshItem
+    {
+        std::string Name;
+        MeshData    Data;
     };
 } // namespace SnowLeopardEngine::AssetPipeline

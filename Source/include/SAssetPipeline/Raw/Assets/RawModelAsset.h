@@ -8,11 +8,11 @@ namespace SnowLeopardEngine::AssetPipeline
     {
     public:
         RawModelAsset() = default;
-        RawModelAsset(const std::vector<RawMesh> meshes) : m_Meshes(meshes) {}
+        RawModelAsset(const std::vector<RawMeshItem> meshItems) : m_MeshItems(meshItems) {}
 
-        void AddMesh(const RawMesh& mesh) { m_Meshes.emplace_back(mesh); }
+        void AddMeshItem(const RawMeshItem& meshItem) { m_MeshItems.emplace_back(meshItem); }
 
     private:
-        std::vector<RawMesh> m_Meshes;
+        std::vector<RawMeshItem> m_MeshItems;
     };
 } // namespace SnowLeopardEngine::AssetPipeline

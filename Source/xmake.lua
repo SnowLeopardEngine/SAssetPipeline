@@ -1,4 +1,5 @@
 -- add requirements
+add_requires("tinyobjloader")
 
 -- target defination, name: SCore
 target("SCore")
@@ -18,3 +19,4 @@ target("SCore")
     add_files("src/**.cpp")
 
     -- add packages
+    add_packages("tinyobjloader", { public = true })
