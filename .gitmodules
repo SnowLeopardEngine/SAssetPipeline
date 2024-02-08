@@ -1,0 +1,3 @@
+[submodule "Submodules/SCore"]
+	path = Submodules/SCore
+	url = git@github.com:SnowLeopardEngine/SCore.git
