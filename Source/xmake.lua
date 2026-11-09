@@ -1,22 +1,40 @@
--- add requirements
-add_requires("tinyobjloader")
+-- Runtime: what a game needs to read cooked assets (no importer dependencies).
+add_requires("nlohmann_json", "zstd")
+-- Import: source formats and hashing.
+add_requires("assimp", "stb", "xxhash")
 
--- target defination, name: SCore
-target("SCore")
-    -- set target kind: static library
+target("SAssetPipeline")
     set_kind("static")
+    set_languages("cxx20")
+    add_includedirs("Runtime/include", {public = true})
+    add_headerfiles("Runtime/include/(SAssetPipeline/*.h)")
+    add_files("Runtime/src/*.cpp")
+    add_packages("nlohmann_json")
+    add_packages("zstd", {public = true})
 
-    -- add include dir
-    add_includedirs("include", { public = true }) -- public: let other targets to auto include
+-- BC7 encoder (vendored, ThirdParty/bc7enc). Always optimized: unoptimized, it makes debug imports minutes long.
+target("SAssetPipeline_bc7enc")
+    set_kind("static")
+    set_languages("cxx20")
+    set_optimize("fastest")
+    set_symbols("none")
+    set_warnings("none")
+    add_includedirs("../ThirdParty/bc7enc", {public = true})
+    add_files("../ThirdParty/bc7enc/bc7enc.cpp")
 
-    -- set precompiled header file (PCH)
-    set_pcxxheader("include/SAssetPipeline/PrecompiledHeader.h")
+target("SAssetPipelineImport")
+    set_kind("static")
+    set_languages("cxx20")
+    add_deps("SAssetPipeline", {public = true})
+    add_deps("SAssetPipeline_bc7enc")
+    add_includedirs("Import/include", {public = true})
+    add_headerfiles("Import/include/(SAssetPipeline/Import/*.h)")
+    add_files("Import/src/*.cpp")
+    add_packages("assimp", "stb", "xxhash", "nlohmann_json")
 
-    -- add header files
-    add_headerfiles("include/(SAssetPipeline/**.h)")
-
-    -- add source files
-    add_files("src/**.cpp")
-
-    -- add packages
-    add_packages("tinyobjloader", { public = true })
+target("sap")
+    set_kind("binary")
+    set_languages("cxx20")
+    add_deps("SAssetPipelineImport")
+    add_files("Tool/main.cpp")
+    add_packages("assimp", "stb", "xxhash", "nlohmann_json")

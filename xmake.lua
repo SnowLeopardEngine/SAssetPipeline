@@ -1,39 +1,32 @@
--- set project name
+-- SAssetPipeline: the asset pipeline of SnowLeopardEngine.
+--
+-- Targets (Source/xmake.lua):
+--   SAssetPipeline        runtime library: cooked asset formats, their readers / writers, the asset registry
+--   SAssetPipelineImport  importers (Assimp, stb), import settings (.simport), the import database
+--   sap                   command line tool
+--
+-- The engine either uses the package or includes Source/ directly (`xmake f --sap_dir=<this checkout>` in the
+-- engine), so Source/xmake.lua must not depend on anything set here.
 set_project("SAssetPipeline")
+set_version("0.2.0")
+set_languages("cxx20")
 
--- set project version
-set_version("0.1.0")
-
--- set language version: C++ 17
-set_languages("cxx17")
-
--- global options
-option("examples") -- build examples?
-    set_default(false)
+option("sap_tests")
+    set_default(true)
+    set_showmenu(true)
+    set_description("Build the SAssetPipeline tests")
 option_end()
 
--- if build on windows
-if is_host("windows") then
-    add_cxxflags("/Zc:__cplusplus", {tools = {"msvc", "cl"}}) -- fix __cplusplus == 199711L error
-    add_cxxflags("/bigobj") -- avoid big obj
-    set_runtimes("MD")
-end
-
--- global rules
 add_rules("mode.debug", "mode.release")
-add_rules("plugin.vsxmake.autoupdate")
 add_rules("plugin.compile_commands.autoupdate", {outputdir = ".vscode"})
 
--- add our own xmake-repo here
-add_repositories("snow-leopard-engine-xmake-repo https://github.com/SnowLeopardEngine/xmake-repo.git dev")
+if is_plat("windows") then
+    add_cxflags("/utf-8", "/Zc:__cplusplus", {tools = {"msvc", "cl"}})
+    set_runtimes(is_mode("debug") and "MDd" or "MD")
+end
 
--- include sub modules
-includes("Submodules")
-
--- include source
 includes("Source")
 
--- if build examples, then include examples
-if has_config("examples") then
-    includes("Examples")
+if has_config("sap_tests") then
+    includes("Tests")
 end

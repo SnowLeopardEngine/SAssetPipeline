@@ -1,0 +1,7 @@
+target("SAssetPipelineTests")
+    set_kind("binary")
+    set_languages("cxx20")
+    set_default(false)
+    add_deps("SAssetPipelineImport")
+    add_files("main.cpp")
+    add_packages("stb", "nlohmann_json", "assimp", "xxhash")
