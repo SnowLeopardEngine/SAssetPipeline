@@ -22,7 +22,11 @@ add_rules("plugin.compile_commands.autoupdate", {outputdir = ".vscode"})
 
 if is_plat("windows") then
     add_cxflags("/utf-8", "/Zc:__cplusplus", {tools = {"msvc", "cl"}})
-    set_runtimes(is_mode("debug") and "MDd" or "MD")
+    -- As a package, the consumer's runtime is passed in (--runtimes) and must win: its dependencies (Assimp...) are
+    -- built with it. Standalone builds pick the runtime from the mode.
+    if not get_config("runtimes") then
+        set_runtimes(is_mode("debug") and "MDd" or "MD")
+    end
 end
 
 includes("Source")
