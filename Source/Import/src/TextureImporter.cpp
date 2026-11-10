@@ -1,5 +1,7 @@
 #include "Importers.h"
 
+// Internal linkage: a program that links this library may carry its own stb_image (the engine does).
+#define STB_IMAGE_STATIC
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
